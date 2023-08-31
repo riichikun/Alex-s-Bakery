@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/Online-Bakery-Shop-On-React/static/css/main.315d5168.css",
+    "main.js": "/Online-Bakery-Shop-On-React/static/js/main.fc250ffe.js",
+    "static/media/index.cjs": "/Online-Bakery-Shop-On-React/static/media/index.cd2730895dbd1969d9c3.cjs",
+    "index.html": "/Online-Bakery-Shop-On-React/index.html",
+    "main.315d5168.css.map": "/Online-Bakery-Shop-On-React/static/css/main.315d5168.css.map",
+    "main.fc250ffe.js.map": "/Online-Bakery-Shop-On-React/static/js/main.fc250ffe.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.315d5168.css",
+    "static/js/main.fc250ffe.js"
+  ]
+}
