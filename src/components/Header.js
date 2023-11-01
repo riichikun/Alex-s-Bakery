@@ -29,10 +29,12 @@ export default function Header(props) {
         </div>
       </div>
       <div class="cart__container">
-          <BsCart4 onClick={() => 
-            {setCartOpen(cartOpen = !cartOpen)}} className={`cart ${cartOpen && 'active' }`} />
-          {cartOpen && (
-            <div className='cartInner'>
+          <BsCart4 onClick={() => {
+              setCartOpen(cartOpen = !cartOpen);
+              props.checkIfInStorage()
+            }} className={`cart ${cartOpen && 'active' }`} />
+          {cartOpen &&  (
+            <div className='cartInner' >
               {props.cartEmpty == true && <p>Cart is empty</p>}
                 {props.orders.map(e => (
                     <Order onDelete={ props.onDelete } key={e.id} item={e} items={props.items}/>

@@ -41,14 +41,6 @@ class App extends React.Component {
           category: 'other',
           ordered: 0,
         },
-        {
-          id: 4,
-          title: 'Andrew',
-          img: 'andrew.jpg',
-          price: 'PRICELE$$',
-          category: 'other',
-          ordered: 0,
-        }
       ],
       currentItems: [
       ],
@@ -59,6 +51,7 @@ class App extends React.Component {
     this.deleteOrder = this.deleteOrder.bind(this)
     this.chooseCategory = this.chooseCategory.bind(this)
     this.checkCartEmptyness = this.checkCartEmptyness.bind(this)
+    this.checkIfInStorage = this.checkIfInStorage.bind(this)
 
   }
 
@@ -71,7 +64,7 @@ class App extends React.Component {
 
 
 
-        <Header cartEmpty={this.state.cartEmpty} orders={this.state.orders} onDelete={this.deleteOrder} items={this.state.items}/>
+        <Header checkIfInStorage={this.checkIfInStorage} cartEmpty={this.state.cartEmpty} orders={this.state.orders} onDelete={this.deleteOrder} items={this.state.items}/>
         <Routes>
             <Route path="/catalog" element={ <Catalog currentItems={this.state.currentItems} onAdd={this.addToOrder} chooseCategory={ this.chooseCategory }/>} />
             <Route path="/" element={ <MainPageItems items={this.state.items} onAdd={this.addToOrder}/> } />     
@@ -87,28 +80,59 @@ class App extends React.Component {
     );    
   }
 
+  checkIfInStorage() {
+    for(let i=0; i<this.state.items.length; i++) {
+      if(window.localStorage.getItem(`id ${i + 1}`) != null && this.state.cartEmpty == true) {
+        this.setState({cartEmpty: false})
+        this.setState({orders: [...this.state.orders, this.state.items[i]]})    
+        let witems = [...this.state.items];
+        let witem = {...witems[this.state.items[i].id - 1]};
+        witem.ordered = Number(window.localStorage.getItem(`id ${this.state.items[i].id}`));
+        witems[this.state.items[i].id - 1] = witem;
+        this.setState({items: witems}) 
+        window.localStorage.setItem(`id ${this.state.items[i].id}`, Number(window.localStorage.getItem(`id ${this.state.items[i].id}`)))
+      }
+    }
+  }
+
 checkCartEmptyness(added) {
   if(this.state.orders.length + added == 0) this.setState({cartEmpty: true})
   else(this.setState({cartEmpty: false}))
+
 }
   componentWillReceiveProps(nextProps) {
     
   }
   addToOrder(item) {
-    let isInArray = false
-    this.state.orders.forEach(el => {
-      if(el.id === item.id) {
-        isInArray = true;
-      }
-    })
-    if (!isInArray) {
-      this.setState({orders: [...this.state.orders, item]})  
+      let isInArray = false
+      this.state.orders.forEach(el => {
+        if(el.id === item.id) {
+          isInArray = true;
+        }
+      })
+      if (!isInArray) {
+        if(window.localStorage.getItem(`id ${item.id}`) != null) {
+          this.setState({orders: [...this.state.orders, item]})    
+          let witems = [...this.state.items];
+          let witem = {...witems[item.id - 1]};
+          witem.ordered = Number(window.localStorage.getItem(`id ${item.id}`)) + 1;
+          witems[item.id - 1] = witem;
+          this.setState({items: witems}) 
+          window.localStorage.setItem(`id ${item.id}`, Number(window.localStorage.getItem(`id ${item.id}`)))
+        }
+        else {
+          this.setState({orders: [...this.state.orders, item]})  
+          let witems = [...this.state.items];
+          let witem = {...witems[item.id - 1]};
+          witem.ordered = 1;
+          witems[item.id - 1] = witem;
+          this.setState({items: witems})            
+          window.localStorage.setItem(`id ${item.id}`, 0)
+          console.log(localStorage.getItem("id 5"))          
+        }
 
-      let witems = [...this.state.items];
-      let witem = {...witems[item.id - 1]};
-      witem.ordered = 1;
-      witems[item.id - 1] = witem;
-      this.setState({items: witems})  
+      //let orderedForStorage = [...this.state.orders, item].map((itemObj) => item.id)
+
       }    
 
     else {
@@ -117,13 +141,17 @@ checkCartEmptyness(added) {
       witem.ordered = witem.ordered + 1;
       witems[item.id - 1] = witem;
       this.setState({items: witems})}
-      console.log(this.state.orders)
       this.checkCartEmptyness(1)
+      window.localStorage.setItem(`id ${item.id}`, Number(window.localStorage.getItem(`id ${item.id}`)) + 1)
+
+      console.log(localStorage.getItem("id 3")) 
+   
   }
 deleteOrder(id) {
   this.setState({orders: this.state.orders.filter(e => e.id !== id)});
   console.log(this.state.orders)
   this.checkCartEmptyness(-1)
+  window.localStorage.removeItem(`id ${id}`)
 }
 chooseCategory(category) {
   if(category == 'all') {
