@@ -9,12 +9,12 @@ export default class AddToCartButton extends Component {
          windowOpen: false,
          countOrders: 1
         }
-        this.mako = this.mako.bind(this)
+        this.addCount = this.addCount.bind(this)
     }
     openWindow() {
         this.setState({windowOpen: !this.state.windowOpen})
       }
-      mako() {
+      addCount() {
         this.setState({countOrders: this.state.countOrders + 1})
       }
     render() {
@@ -22,7 +22,7 @@ export default class AddToCartButton extends Component {
         <div className='add-button__container'>
             <button onClick={() => {
                 this.openWindow()
-                this.mako()
+                this.addCount()
               } }  className={`${ this.state.windowOpen == true ? 'active' : '' }`}>Add to cart</button>
             
               { this.state.windowOpen == true ? <div className='modal'>

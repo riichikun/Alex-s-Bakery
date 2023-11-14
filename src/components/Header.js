@@ -9,6 +9,7 @@ export default function Header(props) {
 }
   let [cartOpen, setCartOpen] = useState(false)
   let [burgerOpen, setBurgerOpen] = useState(false)
+  let [storageEmpty, setStorageEmpty] = useState(false)
   let total = 0;
   props.orders.forEach(e => total += Number(e.price * props.items[e.id - 1].ordered))
 
